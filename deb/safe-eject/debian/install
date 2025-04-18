@@ -1,0 +1,3 @@
+seject usr/bin/
+README.md usr/share/doc/safe-eject/
+seject.1 usr/share/man/man1/

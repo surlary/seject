@@ -1,0 +1,18 @@
+Source: safe-eject
+Section: utils
+Priority: optional
+Maintainer: Rogerio O. Ferraz <rogerio.o.ferraz@gmail.com>
+Build-Depends: debhelper (>= 11)
+Standards-Version: 4.5.1
+Homepage: https://github.com/rogeriooferraz/seject
+
+Package: safe-eject
+Architecture: all
+Depends: ${misc:Depends}, udisks2 (>= 2.8.0), psmisc (>= 22.21), coreutils (>= 8.25), util-linux (>= 2.29)
+Description: seject - Safely eject USB drives
+ A command-line utility to safely unmount and power off USB drives.
+ It ensures data integrity by flushing the write cache, and confirming that no
+ partitions remain mounted or in use, so the USB drive can be safely unplugged.
+ The command accepts a single argument, which can be the USB drive device
+ (e.g. /dev/sdX), or a USB partition device (e.g. /dev/sdXN). In both cases,
+ the behavior is the same.

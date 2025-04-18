@@ -1,0 +1,179 @@
+#!/bin/bash
+
+# seject - Safely eject USB drives
+# Copyright (c) 2025 Rogerio O. Ferraz <rogerio.o.ferraz@gmail.com>
+
+# MIT License
+
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+set -euo pipefail
+
+SCRIPTNAME="$(basename ${BASH_SOURCE[0]})"
+
+USAGE="Usage: ${SCRIPTNAME} <drive> | <partition>
+
+seject - Safely eject USB drives
+
+A command-line utility to safely unmount and power off USB drives.
+
+It ensures data integrity by flushing the write cache, and confirming that no
+partitions remain mounted or in use, so the USB drive can be safely unplugged.
+
+The command accepts a single argument, which can be the USB drive device
+(e.g. /dev/sdX), or a USB partition device (e.g. /dev/sdXN). In both cases,
+the behavior is the same.
+
+ARGUMENTS:
+  <drive>     : USB device drive, e.g., /dev/sdX
+
+  <partition> : USB device partition, e.g., /dev/sdXN
+
+Examples:
+
+Find your USB drive:
+$ lsblk -ln -o NAME,SIZE,TYPE,MOUNTPOINT
+
+Safely eject USB drive by device path:
+$ seject /dev/sdX
+
+Safely eject USB drive by a partition path:
+$ seject /dev/sdXN
+"
+
+# Validate user input
+if [ "${#}" -lt 1 ]; then
+    echo "Error: missing argument"
+    echo "Usage: ${0} <drive> | <partition>"
+    echo "See 'seject --help' or manual page for more information"
+    exit 1
+fi
+
+# Help Option
+if [ "${1}" = "-h" ] || [ "${1}" = "--help" ]; then
+  echo "${USAGE}"
+  exit 0
+fi
+
+# Get device path
+DEVICE="${1:-}"
+if [[ -z "${DEVICE}" ]]; then
+    echo "error: no device specified"
+    echo "See 'seject --help' or manual page for more information"
+    exit 1
+fi
+if [[ ! -b "${DEVICE}" ]]; then
+    echo "error: device not found: ${DEVICE}"
+    echo "See 'seject --help' or manual page for more information"
+    exit 2
+fi
+BASENAME="$(basename ${DEVICE})"
+if [[ "${BASENAME}" =~ ^(sd[a-z])$ ]]; then
+    DRIVE="/dev/${BASH_REMATCH[1]}"
+elif [[ "${BASENAME}" =~ ^(sd[a-z])([0-9]+)$ ]]; then
+    DRIVE="/dev/${BASH_REMATCH[1]}"
+else
+    echo "error: unsupported device: ${BASENAME}"
+    echo "See 'seject --help' or manual page for more information"
+    exit 7
+fi
+
+# Check dependencies
+if ! command -v udisksctl &> /dev/null; then
+    echo "error: udisksctl not found. Please install udisks2"
+    exit 3
+fi
+if ! command -v fuser &> /dev/null; then
+    echo "error: fuser not found. Please install psmisc"
+    exit 4
+fi
+if ! command -v sync &> /dev/null; then
+    echo "error: sync not found. Please install coreutils"
+    exit 5
+fi
+if ! command -v lsblk &> /dev/null; then
+    echo "error: lsblk not found. Please install util-linux"
+    exit 6
+fi
+
+# Unmount device partition(s)
+MOUNTED_LEFT=0
+while read -r PART MOUNTPOINT; do
+    PARTITION="/dev/${PART}"
+    if [[ -n "${MOUNTPOINT}" && -e "${PARTITION}" ]]; then
+        echo "Unmounting ${PARTITION} (${MOUNTPOINT})..."
+        sync
+        ERR_MSG=$(udisksctl unmount -b "${PARTITION}" 2>&1 1>/dev/null) || {
+            if ! fuser -s "${PARTITION}"; then
+                echo "error: failed to unmount ${PARTITION}"
+                echo "${ERR_MSG}"
+                exit 8
+            else
+                timeout=10
+                waited=0
+                echo "Waiting for ${PARTITION} to become free..."
+                echo -n "."
+                sleep 1
+                (( waited++ ))
+                sync
+                while ! ERR_MSG=$(udisksctl unmount -b "${PARTITION}" 2>&1 1>/dev/null); do
+                    if ! fuser -s "${PARTITION}"; then
+                        echo "error: failed to unmount ${PARTITION}"
+                        echo "${ERR_MSG}"
+                        exit 9
+                    else
+                        if (( waited >= timeout )); then
+                            echo -e "\nerror: failed to unmount ${PARTITION}"
+                            echo "${ERR_MSG}"
+                            exit 10
+                        else
+                            echo -n "."
+                            sleep 1
+                            (( waited++ ))
+                            sync
+                        fi
+                    fi
+                done
+                echo -e "\n"
+            fi
+        }
+        echo "Unmounted ${PARTITION}"
+    fi
+done < <(lsblk -ln -o NAME,MOUNTPOINT "${DRIVE}")
+
+# Flush write cache
+echo "Flushing write cache (sync)..."
+sync
+
+# Final sync before power-off
+sync
+
+# Power off
+if [[ -b "${DRIVE}" ]]; then
+    echo "Powering off ${DRIVE}..."
+    udisksctl power-off -b "${DRIVE}" || {
+        echo "error: failed to power off drive ${DRIVE}"
+        exit 11
+    }
+else
+    echo "Skipping power-off: ${DRIVE} no longer exists"
+fi
+
+echo "You may now safely unplug the device"
+exit 0
