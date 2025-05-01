@@ -1,6 +1,10 @@
-# seject - Safely eject USB drives
+# seject - Safely eject USB drive
 
-A command-line utility to safely unmount and power off USB drives.
+A command-line utility to safely unmount and poweroff USB mass-storage devices.
+
+A bash script that mimics the behavior of “Safely Remove USB Drive” in modern
+Linux Desktops. It unmounts all partitions, flushes write cache, and powers off
+the USB drive, using udisks2 under the hood.
 
 It ensures data integrity by flushing the write cache, and confirming that no
 partitions remain mounted or in use, so the USB drive can be safely unplugged.
@@ -33,9 +37,27 @@ This script ensures:
 - The disk disappears from `lsblk`
 - The LED turns off or disk spins down
 
-## Usage Examples
+## Usage
 
 ```bash
+seject [OPTIONS] device
+
+ARGUMENTS:
+  device         : USB storage device path, e.g., /dev/sdX
+                   or USB storage partition path, e.g., /dev/sdXN
+
+OPTIONS:
+  -d, --debug    : Enable debug output
+  -h, --help     : Display usage information
+  -v, --version  : Show current version
+```
+
+## Examples
+
+```bash
+# Display usage information:
+$ seject --help
+
 # Find your USB drive:
 $ lsblk -ln -o NAME,SIZE,TYPE,MOUNTPOINT
 
@@ -60,7 +82,7 @@ sync command, from package version 8.25 onwards
 - `util-linux`<br>
 lsblk command, from package version 2.29 onwards
 
-## Installation on Linux
+## Install
 
 You may do a manual install, for the main script only:
 
@@ -78,19 +100,42 @@ Debian, Ubuntu, Linux Mint, Zorin OS, and Pop!_OS, among others.
 cd /tmp
 git clone git@github.com:rogeriooferraz/seject.git
 sudo apt update
-sudo apt install ./seject/deb/safe-eject_1.0-1_all.deb
+sudo apt install ./seject/deb/safe-eject_1.0-2_all.deb
 ```
 
-## Tested with
+## Uninstall
 
+Uninstalling a manual install:
+
+```bash
+rm -rf /tmp/seject
+sudo rm /usr/local/bin/seject
+```
+
+Uninstalling an apt install:
+
+```bash
+rm -rf /tmp/seject
+sudo apt update
+sudo apt remove safe-eject
+```
+
+## Testing
+
+Tested on **Ubuntu 24.04** with **GNOME** desktop environment:
+
+Covered use cases:
 - External USB 3.0 HDDs and SSDs (JMicron / Orico)
-- Ubuntu 24.04 LTS with GNOME & X11
 - Multi-partition devices
 
 ## License
 
-MIT License<br>
-This is free software: you are free to change and redistribute it.<br>
+This project is licensed under the MIT License.<br>
+It is free and open source software: you can freely use it, change it, and redistribute it.<br>
 There is NO WARRANTY, to the extent permitted by law.
 
 **Project page**: https://github.com/rogeriooferraz/seject
+
+## Author
+
+Rogerio O. Ferraz (<rogerio.o.ferraz@gmail.com>)

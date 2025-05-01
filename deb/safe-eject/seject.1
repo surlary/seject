@@ -1,14 +1,17 @@
-.TH SEJECT 1 "April 2025" "Version 1.0" "User Commands"
+.TH SEJECT 1 "April 2025" "safe-eject 1.0" "User Commands"
+
 .SH NAME
-seject \- Safely eject USB drives
+seject \- Safely eject USB drive
 
 .SH SYNOPSIS
-.B seject
-.RI drive\ |\ partition
+.B \fBseject\fR [OPTIONS] \fIdevice\fR
 
 .SH DESCRIPTION
-.B seject
-is a command-line utility to safely unmount and power off USB drives.
+A command-line utility to safely unmount and poweroff USB mass-storage devices.
+.PP
+A bash script that mimics the behavior of “Safely Remove USB Drive” in modern
+Linux Desktops. It unmounts all partitions, flushes write cache, and powers off
+the USB drive, using udisks2 under the hood.
 .PP
 It ensures data integrity by flushing the write cache, and confirming that no
 partitions remain mounted or in use, so the USB drive can be safely unplugged.
@@ -29,73 +32,62 @@ the behavior is the same.
 
 .SH ARGUMENTS
 .TP
-.I drive
-The full path to the USB device (e.g. /dev/sdX)
-.TP
-.I partition
-The full path to a partition on the USB device (e.g. /dev/sdXN)
-.TP
-Both forms are accepted and treated the same
+\fIdevice\fR
+USB storage device path (e.g. /dev/sdX)
+.br
+or USB storage partition path (e.g. /dev/sdXN)
 
 .SH OPTIONS
-None
+.TP
+\fB-d\fR, \fB--debug\fR
+Enable debug output
+.TP
+\fB-h\fR, \fB--help\fR
+Display usage information
+.TP
+\fB-v\fR, \fB--version\fR
+Show current version
 
 .SH EXAMPLES
-
-.EE
+.TP
 Find your USB drive:
-.EE
-$ lsblk -ln -o NAME,SIZE,TYPE,MOUNTPOINT
-
-.EE
+.B
+lsblk -ln -o NAME,SIZE,TYPE,MOUNTPOINT
+.TP
 Safely eject USB drive by device path:
-.EE
-$ seject /dev/sdX
-
-.EE
-Safely eject USB drive by a partition path:
-.EE
-$ seject /dev/sdXN
+.B
+seject /dev/sdX
+.TP
+Safely eject USB drive by partition path:
+.B
+seject /dev/sdXN
 
 .SH REQUIREMENTS
 .TP
 .BR udisksctl (1)
-Provided by the
-.IR udisks2
-package
-
+Provided by \fIudisks2\fR package
 .TP
-.BR fuser (1),
-Provided by the
-.IR psmisc
-package
-
+.BR fuser (1)
+Provided by \fIpsmisc\fR package
 .TP
 .BR sync (1)
-Provided by the
-.IR coreutils
-package
-
+Provided by \fIcoreutils\fR package
 .TP
 .BR lsblk (8)
-Provided by the
-.IR util-linux
-package
+Provided by \fIutil-linux\fR package
 
 .SH SEE ALSO
 .BR eject (1)
 
-.SH AUTHOR
-Rogerio O. Ferraz <rogerio.o.ferraz@gmail.com>
-
 .SH LICENSE
-MIT License
+This project is licensed under the MIT License.
 .br
-This is free software: you are free to change and redistribute it
+It is free and open source software: you can freely use it, change it, and redistribute it.
 .br
-There is NO WARRANTY, to the extent permitted by law
-.br
-Copyright (c) 2025 Rogerio O. Ferraz <rogerio.o.ferraz@gmail.com>
+There is NO WARRANTY, to the extent permitted by law.
 
 .SH PROJECT PAGE
 https://github.com/rogeriooferraz/seject
+
+.SH AUTHOR
+Rogerio O. Ferraz <rogerio.o.ferraz@gmail.com>

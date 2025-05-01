@@ -1,5 +1,11 @@
-safe-eject (1.0-1) unstable; urgency=medium
+safe-eject (1.0-2) unstable; urgency=medium
 
-  * Initial release
+  * Added command line options:
+    -d, --debug    : Enable debug output
+    -h, --help     : Display usage information
+    -v, --version  : Show current version
+  * Improved input validation, and handling of errors
+  * Refined waiting logic for busy devices with timeout support
+  * Improved documentation
 
- -- Rogerio O. Ferraz <rogerio.o.ferraz@gmail.com>  Wed, 16 Apr 2025 23:20:00 -0300
+ -- Rogerio Ferraz <your@email.com>  Thu, 01 May 2025 00:00:00 -0300

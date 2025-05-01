@@ -7,12 +7,12 @@ tmp/
 deb/safe-eject/debian/debhelper-build-stamp
 deb/safe-eject/debian/safe-eject.substvars
 deb/safe-eject/debian/files
-deb/safe-eject/debian/safe-eject_1.0-1_all.deb
+deb/safe-eject/debian/safe-eject_*_all.deb
 
-deb/safe-eject-1.0
-deb/safe-eject_1.0-1_amd64.buildinfo
-deb/safe-eject_1.0-1_amd64.changes
-deb/safe-eject_1.0-1.debian.tar.xz
-deb/safe-eject_1.0-1.dsc
-deb/safe-eject_1.0-1.tar.gz
-deb/safe-eject_1.0.orig.tar.gz
+deb/safe-eject-*
+deb/safe-eject_*_amd64.buildinfo
+deb/safe-eject_*_amd64.changes
+deb/safe-eject_*.debian.tar.xz
+deb/safe-eject_*.dsc
+deb/safe-eject_*.tar.gz
+deb/safe-eject_*.orig.tar.gz

@@ -9,8 +9,11 @@ Homepage: https://github.com/rogeriooferraz/seject
 Package: safe-eject
 Architecture: all
 Depends: ${misc:Depends}, udisks2 (>= 2.8.0), psmisc (>= 22.21), coreutils (>= 8.25), util-linux (>= 2.29)
-Description: seject - Safely eject USB drives
- A command-line utility to safely unmount and power off USB drives.
+Description: seject - Safely eject USB drive
+ A command-line utility to safely unmount and poweroff USB mass-storage devices.
+ A bash script that mimics the behavior of “Safely Remove USB Drive” in modern
+ Linux Desktops. It unmounts all partitions, flushes write cache, and powers off
+ the USB drive, using udisks2 under the hood.
  It ensures data integrity by flushing the write cache, and confirming that no
  partitions remain mounted or in use, so the USB drive can be safely unplugged.
  The command accepts a single argument, which can be the USB drive device
