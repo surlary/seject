@@ -39,7 +39,7 @@ This script ensures:
 
 ## Usage
 
-```bash
+```
 seject [OPTIONS] device
 
 ARGUMENTS:
@@ -47,24 +47,30 @@ ARGUMENTS:
                    or USB storage partition path, e.g., /dev/sdXN
 
 OPTIONS:
-  -d, --debug    : Enable debug output
+  -D, --debug    : Enable debug output
   -h, --help     : Display usage information
-  -v, --version  : Show current version
+  -V, --version  : Show current version
 ```
 
 ## Examples
 
-```bash
-# Display usage information:
+### 1. Display usage information
+```
 $ seject --help
+```
 
-# Find your USB drive:
+### 2. Find your USB drive
+```
 $ lsblk -ln -o NAME,SIZE,TYPE,MOUNTPOINT
+```
 
-# Safely eject USB drive by device path:
+### 3. Safely eject USB drive by device path
+```
 $ seject /dev/sdX
+```
 
-# Safely eject USB drive by a partition path:
+### 4. Safely eject USB drive by a partition path
+```
 $ seject /dev/sdXN
 ```
 
@@ -86,36 +92,38 @@ lsblk command, from package version 2.29 onwards
 
 You may do a manual install, for the main script only:
 
-```bash
+```
 cd /tmp
 git clone git@github.com:rogeriooferraz/seject.git
 sudo cp seject/seject /usr/local/bin/
 sudo chmod +x /usr/local/bin/seject
+rm -rf /tmp/seject
+cd -
 ```
 
 Or run apt install (includes man support), for Debian-based distros, such as
 Debian, Ubuntu, Linux Mint, Zorin OS, and Pop!_OS, among others.
 
-```bash
+```
 cd /tmp
 git clone git@github.com:rogeriooferraz/seject.git
 sudo apt update
-sudo apt install ./seject/deb/safe-eject_1.0-2_all.deb
+sudo apt install ./seject/deb/safe-eject_1.0-3_all.deb
+rm -rf /tmp/seject
+cd -
 ```
 
 ## Uninstall
 
 Uninstalling a manual install:
 
-```bash
-rm -rf /tmp/seject
+```
 sudo rm /usr/local/bin/seject
 ```
 
 Uninstalling an apt install:
 
-```bash
-rm -rf /tmp/seject
+```
 sudo apt update
 sudo apt remove safe-eject
 ```

@@ -50,29 +50,32 @@ ARGUMENTS:
                    or USB storage partition path, e.g., /dev/sdXN
 
 OPTIONS:
-  -d, --debug    : Enable debug output
+  -D, --debug    : Enable debug output
   -h, --help     : Display usage information
-  -v, --version  : Show current version
+  -V, --version  : Show current version
 
 Examples:
 
-Find your USB drive:
-$ lsblk -ln -o NAME,SIZE,TYPE,MOUNTPOINT
+1. Find your USB drive:
 
-Safely eject USB drive by device path:
-$ ${SCRIPTNAME} /dev/sdX
+  $ lsblk -ln -o NAME,SIZE,TYPE,MOUNTPOINT
 
-Safely eject USB drive by a partition path:
-$ ${SCRIPTNAME} /dev/sdXN
+2. Safely eject USB drive by device path
+
+  $ ${SCRIPTNAME} /dev/sdX
+
+3. Safely eject USB drive by a partition path
+
+  $ ${SCRIPTNAME} /dev/sdXN
 "
 
 # Defaults
-VERSION="${SCRIPTNAME} version 1.0.2"
+VERSION="${SCRIPTNAME} version 1.0.3"
 
 # Options
 while [ ${#} -gt 0 ] ; do
   case "${1:-}" in
-    --debug|-d)
+    --debug|-D)
       shift
       set -x
       ;;
@@ -80,7 +83,7 @@ while [ ${#} -gt 0 ] ; do
       echo "${USAGE}"
       exit 0
       ;;
-    --version)
+    --version|-V)
       echo "${VERSION}"
       exit 0
       ;;

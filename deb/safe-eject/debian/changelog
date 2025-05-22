@@ -1,11 +1,10 @@
-safe-eject (1.0-2) unstable; urgency=medium
+safe-eject (1.0-3) unstable; urgency=medium
 
-  * Added command line options:
-    -d, --debug    : Enable debug output
-    -h, --help     : Display usage information
-    -v, --version  : Show current version
-  * Improved input validation, and handling of errors
-  * Refined waiting logic for busy devices with timeout support
-  * Improved documentation
+  * Modified command line options:
+    from -d to -D  : Enable debug output
+    from -v to -V  : Show current version
 
- -- Rogerio Ferraz <your@email.com>  Thu, 01 May 2025 00:00:00 -0300
+  * Improved README
+    Updated install/uninstall instructions
+
+ -- Rogerio Ferraz <your@email.com>  Wed, 21 May 2025 19:59:00 -0300
