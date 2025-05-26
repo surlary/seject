@@ -69,8 +69,13 @@ Examples:
   $ ${SCRIPTNAME} /dev/sdXN
 "
 
-# Defaults
-VERSION="${SCRIPTNAME} version 1.0.3"
+VERSION="
+${SCRIPTNAME} 1.0.3
+Copyright (c) 2025 Rogerio O. Ferraz <rogerio.o.ferraz@gmail.com>
+MIT License <https://github.com/rogeriooferraz/seject/blob/main/LICENSE>
+This is free and open source software.
+There is NO WARRANTY, to the extent permitted by law.
+"
 
 # Options
 while [ ${#} -gt 0 ] ; do
