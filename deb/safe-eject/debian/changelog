@@ -7,4 +7,7 @@ safe-eject (1.0-3) unstable; urgency=medium
   * Improved README
     Updated install/uninstall instructions
 
+  * Improved version info
+    Added License and copyright statements
+
  -- Rogerio Ferraz <your@email.com>  Wed, 21 May 2025 19:59:00 -0300

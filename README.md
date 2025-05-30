@@ -94,7 +94,7 @@ You may do a manual install, for the main script only:
 
 ```
 cd /tmp
-git clone git@github.com:rogeriooferraz/seject.git
+git clone https://github.com/rogeriooferraz/seject.git
 sudo cp seject/seject /usr/local/bin/
 sudo chmod +x /usr/local/bin/seject
 rm -rf /tmp/seject
@@ -106,7 +106,7 @@ Debian, Ubuntu, Linux Mint, Zorin OS, and Pop!_OS, among others.
 
 ```
 cd /tmp
-git clone git@github.com:rogeriooferraz/seject.git
+git clone https://github.com/rogeriooferraz/seject.git
 sudo apt update
 sudo apt install ./seject/deb/safe-eject_1.0-3_all.deb
 rm -rf /tmp/seject
